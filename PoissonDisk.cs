@@ -14,14 +14,14 @@ namespace ConsoleApp1
         private double Cellsize;
         private Point[,] Grid;
         private Random random;
-     
+
         public PoissonDisk(double h, double w, int n, double s)
         {
             Amount = n;
             Height = h;
             Width = w;
             Separation = s;
-            Cellsize = Separation / Math.Sqrt(2); 
+            Cellsize = Separation / Math.Sqrt(2);
 
             Grid = new Point[
                 (int)(Math.Ceiling(Width) / Cellsize),
@@ -36,6 +36,7 @@ namespace ConsoleApp1
 
         public List<Point> GetPoisson()
         {
+
             Point FirstPoint = new Point(random.Next(0, (int)Width), random.Next(0, (int)Height));
             ToAdd.Add(FirstPoint);
             PoissonPoints.Add(FirstPoint);
@@ -43,17 +44,17 @@ namespace ConsoleApp1
             Point GridReference = GridCoordinate(FirstPoint);
             Grid[(int)GridReference.x, (int)GridReference.y] = FirstPoint;
 
-            while(ToAdd.Count != 0)
+            while (ToAdd.Count != 0 && PoissonPoints.Count < Amount)
             {
                 Point point = randompop();
 
-                for (int count = 0; count < Amount; count ++)
+                for (int count = 0; count < Amount; count++)
                 {
                     Point newPoint = GenerateRandomPointFrom(point);
 
-                    if(InGrid(newPoint))
+                    if (InGrid(newPoint))
                     {
-                        if(!Neighbours(newPoint))
+                        if (!Neighbours(newPoint))
                         {
                             ToAdd.Add(newPoint);
                             PoissonPoints.Add(newPoint);
@@ -70,9 +71,10 @@ namespace ConsoleApp1
 
         private Point randompop()
         {
+
             int randomindex = random.Next(0, ToAdd.Count - 1);
             Point returnpoint = ToAdd[randomindex];
-            ToAdd.RemoveAt(randomindex);
+            //ToAdd.RemoveAt(randomindex);
             return returnpoint;
         }
 
@@ -86,8 +88,13 @@ namespace ConsoleApp1
 
         private Point GenerateRandomPointFrom(Point point)
         {
-            double Rand1 = random.Next(1, 100) / 100;
-            double Rand2 = random.Next(1, 100) / 100;
+
+            double Rand1 = random.Next(1, 100);
+            Rand1 /= 100;
+
+            double Rand2 = random.Next(1, 100);
+            Rand2 /= 100;
+
             double radius = Separation * (Rand1 + 1);
             double angle = 2 * Math.PI * Rand2;
 
@@ -108,9 +115,9 @@ namespace ConsoleApp1
             Point GridReference = GridCoordinate(point);
             List<Point> CheckGrid = surroundings(GridReference);
 
-            foreach(Point checkPoint in CheckGrid)
+            foreach (Point checkPoint in CheckGrid)
             {
-                if(checkPoint != null)
+                if (checkPoint != null)
                 {
                     if (Point.distance(point, checkPoint) < Separation)
                     {
@@ -125,9 +132,9 @@ namespace ConsoleApp1
         {
             List<Point> surroundinggrid = new List<Point>();
 
-            for(int count = -2; count <= 2; count ++)
+            for (int count = -2; count <= 2; count++)
             {
-                for(int index = -2; index <= 2; index ++)
+                for (int index = -2; index <= 2; index++)
                 {
                     try
                     {
